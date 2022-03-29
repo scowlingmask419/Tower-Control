@@ -1,116 +1,148 @@
 #include "opengl_interface.hpp"
 
-namespace GL {
-
-void handle_error(const std::string& prefix, const GLenum err)
+namespace GL
 {
-    if (err != GL_NO_ERROR)
-    {
-        throw std::runtime_error { prefix + std::string { ": " } +
-                                   std::string { reinterpret_cast<const char*>(gluErrorString(err)) } };
-    }
-}
 
-void keyboard(unsigned char key, int, int)
-{
-    const auto iter = keystrokes.find(key);
-    if (iter != keystrokes.end())
+    void handle_error(const std::string &prefix, const GLenum err)
     {
-        (iter->second)();
-    }
-}
-
-void toggle_fullscreen()
-{
-    if (fullscreen)
-    {
-        glutPositionWindow(10, 10);
-        glutReshapeWindow(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-    }
-    else
-    {
-        glutFullScreen();
+        if (err != GL_NO_ERROR)
+        {
+            throw std::runtime_error{prefix + std::string{": "} +
+                                     std::string{reinterpret_cast<const char *>(gluErrorString(err))}};
+        }
     }
 
-    handle_error("Toggle fullscreen");
-    fullscreen = !fullscreen;
-}
-
-void change_zoom(const float factor)
-{
-    zoom *= factor;
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-zoom, zoom, -zoom, zoom, 0.0f, 1.0f); // left, right, bottom, top, near, far
-    handle_error("Zoom");
-}
-
-void reshape_window(int w, int h)
-{
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-zoom, zoom, -zoom, zoom, 0.0f, 1.0f); // left, right, bottom, top, near, far
-    handle_error("Cannot reshape window");
-}
-
-void display(void)
-{
-    // sort the displayables by their z-coordinate
-    std::sort(display_queue.begin(), display_queue.end(), disp_z_cmp {});
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-zoom, zoom, -zoom, zoom, 0.0f, 1.0f); // left, right, bottom, top, near, far
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_TEXTURE_2D);
-    for (const auto& item : display_queue)
+    void keyboard(unsigned char key, int, int)
     {
-        item->display();
+        const auto iter = keystrokes.find(key);
+        if (iter != keystrokes.end())
+        {
+            (iter->second)();
+        }
     }
-    glDisable(GL_TEXTURE_2D);
-    glutSwapBuffers();
-}
 
-void timer(const int step)
-{
-    for (auto& item : move_queue)
+    void toggle_fullscreen()
     {
-        item->move();
+        if (fullscreen)
+        {
+            glutPositionWindow(10, 10);
+            glutReshapeWindow(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+        }
+        else
+        {
+            glutFullScreen();
+        }
+
+        handle_error("Toggle fullscreen");
+        fullscreen = !fullscreen;
     }
-    glutPostRedisplay();
-    glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
-}
 
-void init_gl(int argc, char** argv, const char* title)
-{
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGBA);
-    glutInitWindowSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-    glutCreateWindow(title);
-    // glutFullScreen();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    // glEnable(GL_DEPTH_TEST);
-    // The following two lines enable semi transparent
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glShadeModel(GL_FLAT);
+    void change_zoom(const float factor)
+    {
+        zoom *= factor;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-zoom, zoom, -zoom, zoom, 0.0f, 1.0f); // left, right, bottom, top, near, far
+        handle_error("Zoom");
+    }
 
-    glutKeyboardFunc(keyboard);
-    glutDisplayFunc(display);
-    glutReshapeFunc(reshape_window);
+    void reshape_window(int w, int h)
+    {
+        glViewport(0, 0, w, h);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-zoom, zoom, -zoom, zoom, 0.0f, 1.0f); // left, right, bottom, top, near, far
+        handle_error("Cannot reshape window");
+    }
 
-    handle_error("Cannot init OpenGL");
-}
+    void display(void)
+    {
+        // sort the displayables by their z-coordinate
+        // TASK_0 - C.4)
+        std::sort(Displayable::display_queue.begin(),
+                  Displayable::display_queue.end(),
+                  disp_z_cmp{});
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-zoom, zoom, -zoom, zoom, 0.0f, 1.0f); // left, right, bottom, top, near, far
+        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_TEXTURE_2D);
+        for (const auto &item : Displayable::display_queue)
+        {
+            item->display();
+        }
+        glDisable(GL_TEXTURE_2D);
+        glutSwapBuffers();
+    }
 
-void loop()
-{
-    glutTimerFunc(100, timer, 0);
-    glutMainLoop();
-}
+    void timer(const int step)
+    {
+        // TASK_0 - C.2)
+        if (!is_paused)
+        {
+            // TASK_0 - C.2)
+            if (ticks_per_sec != 0)
+            {
+                /*
+                for (auto &item : move_queue)
+                {
+                    item->move();
+                }*/
 
-void exit_loop()
-{
-    glutLeaveMainLoop();
-}
+                // TASK_0 - C.4)
+                for (auto il = move_queue.begin(); il != move_queue.end();)
+                {
+                    auto *object = *il;
+                    if (object->move())
+                    {
+                        il++;
+                    }
+                    else
+                    {
+                        il = move_queue.erase(il);
+                    }
+                }
+
+                glutPostRedisplay();
+                glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
+            }
+            else
+            {
+                glutTimerFunc(0, timer, step + 1);
+            }
+        }
+    }
+
+    void init_gl(int argc, char **argv, const char *title)
+    {
+        glutInit(&argc, argv);
+        glutInitDisplayMode(GLUT_RGBA);
+        glutInitWindowSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+        glutCreateWindow(title);
+        // glutFullScreen();
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        // glEnable(GL_DEPTH_TEST);
+        // The following two lines enable semi transparent
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glShadeModel(GL_FLAT);
+
+        glutKeyboardFunc(keyboard);
+        glutDisplayFunc(display);
+        glutReshapeFunc(reshape_window);
+
+        handle_error("Cannot init OpenGL");
+    }
+
+    void loop()
+    {
+        glutTimerFunc(100, timer, 0);
+        glutMainLoop();
+    }
+
+    void exit_loop()
+    {
+        glutLeaveMainLoop();
+    }
 
 } // namespace GL

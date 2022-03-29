@@ -1,3 +1,0 @@
-/home/amyr/Bureau/CPP_Learning_Project/build/CMakeFiles/rebuild_cache.dir
-/home/amyr/Bureau/CPP_Learning_Project/build/CMakeFiles/edit_cache.dir
-/home/amyr/Bureau/CPP_Learning_Project/build/CMakeFiles/tower.dir
