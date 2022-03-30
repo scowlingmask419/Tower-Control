@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/amyr/Bureau/CPP_Learning_Project/build",
+  "command": "/bin/x86_64-linux-gnu-g++-10 -DGLUT_DISABLE_ATEXIT_HACK  -g -Wall -Wextra -Werror -Wshadow -Wno-deprecated -std=gnu++17 -o CMakeFiles/tower.dir/src/GL/opengl_interface.cpp.o -c /home/amyr/Bureau/CPP_Learning_Project/src/GL/opengl_interface.cpp",
+  "file": "/home/amyr/Bureau/CPP_Learning_Project/src/GL/opengl_interface.cpp"
+},
+{
+  "directory": "/home/amyr/Bureau/CPP_Learning_Project/build",
+  "command": "/bin/x86_64-linux-gnu-g++-10 -DGLUT_DISABLE_ATEXIT_HACK  -g -Wall -Wextra -Werror -Wshadow -Wno-deprecated -std=gnu++17 -o CMakeFiles/tower.dir/src/img/image.cpp.o -c /home/amyr/Bureau/CPP_Learning_Project/src/img/image.cpp",
+  "file": "/home/amyr/Bureau/CPP_Learning_Project/src/img/image.cpp"
+},
+{
+  "directory": "/home/amyr/Bureau/CPP_Learning_Project/build",
+  "command": "/bin/x86_64-linux-gnu-g++-10 -DGLUT_DISABLE_ATEXIT_HACK  -g -Wall -Wextra -Werror -Wshadow -Wno-deprecated -std=gnu++17 -o CMakeFiles/tower.dir/src/aircraft.cpp.o -c /home/amyr/Bureau/CPP_Learning_Project/src/aircraft.cpp",
+  "file": "/home/amyr/Bureau/CPP_Learning_Project/src/aircraft.cpp"
+},
+{
+  "directory": "/home/amyr/Bureau/CPP_Learning_Project/build",
+  "command": "/bin/x86_64-linux-gnu-g++-10 -DGLUT_DISABLE_ATEXIT_HACK  -g -Wall -Wextra -Werror -Wshadow -Wno-deprecated -std=gnu++17 -o CMakeFiles/tower.dir/src/tower_sim.cpp.o -c /home/amyr/Bureau/CPP_Learning_Project/src/tower_sim.cpp",
+  "file": "/home/amyr/Bureau/CPP_Learning_Project/src/tower_sim.cpp"
+},
+{
+  "directory": "/home/amyr/Bureau/CPP_Learning_Project/build",
+  "command": "/bin/x86_64-linux-gnu-g++-10 -DGLUT_DISABLE_ATEXIT_HACK  -g -Wall -Wextra -Werror -Wshadow -Wno-deprecated -std=gnu++17 -o CMakeFiles/tower.dir/src/tower.cpp.o -c /home/amyr/Bureau/CPP_Learning_Project/src/tower.cpp",
+  "file": "/home/amyr/Bureau/CPP_Learning_Project/src/tower.cpp"
+},
+{
+  "directory": "/home/amyr/Bureau/CPP_Learning_Project/build",
+  "command": "/bin/x86_64-linux-gnu-g++-10 -DGLUT_DISABLE_ATEXIT_HACK  -g -Wall -Wextra -Werror -Wshadow -Wno-deprecated -std=gnu++17 -o CMakeFiles/tower.dir/src/main.cpp.o -c /home/amyr/Bureau/CPP_Learning_Project/src/main.cpp",
+  "file": "/home/amyr/Bureau/CPP_Learning_Project/src/main.cpp"
+}
+]
